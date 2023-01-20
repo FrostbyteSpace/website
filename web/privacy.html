@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Frostbyte</title>
+        <!-- Set the icon-->
+        <link rel="icon" type="image/png" href="assets/avatar_transparent.png" />
+        <!-- Load the themer script -->
+        <script src="assets/themer.js"></script>
+        <!-- Import Bulma -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://kit.fontawesome.com/c5c07820bb.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <section class="hero is-primary">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        <!-- Inser the logo before the name-->
+                        <img src="assets/avatar_transparent.png" width="50" height="50">
+                        Frostbyte: Arctic Sunrise
+                    </h1>
+                    <h2 class="subtitle">
+                        Data Usage, Privacy Policy and continued legal stuff.
+                    </h2>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <h2 class="title">Data Usage</h2>
+            <h3 class="subtitle">
+                Frostbyte uses the following data:<br>
+                - Your Discord ID<br>
+                - All server IDs the bot is in<br>
+                - Voice Channel regions (this is for language detection)<br><br>
+                
+                The NSFW filter will not be logged in Frostbyte. All images are sent off via URL format to deepai.org for processing.<br><br>
+
+                Frostbyte will remove all information from the database when it is removed from a server. If you wish to prevent your data or a server from being added to the database, please contact me via email at 
+                <a href="mailto:hello@pandapa.ws">hello@pandapa.ws</a>, or via the <a href="/support">support server</a>, providing a server/user ID or name. However, please note this will cause heavy reduction in the bot's usage, 
+                including all server/user configuration and moderation features.
+            </h2>
+        </section>
+        <section class="section">
+            <h2 class="title">Privacy Policy</h2>
+            <h3 class="subtitle">
+                Frostbyte is aimed to be fully transparent with its data usage. All data is stored in a database, and is not shared with any third parties. The only exception to this is the NSFW filter, which uses deepai.org's API to process images.
+                The bot and all services are hosted on a private server, and are not shared with any third parties. All services are hosted in the following locations:<br>
+                - Frostbyte Stable: London, UK<br>
+                - Frostbyte Alpha: Frankfurt, Germany<br>
+                - Frostbyte Canary: Varies (<a id="note" onclick="showNote()">note</a>)<br>
+                - Frostbyte Legacy: London, UK<br>
+                - Frostbyte Website and Dashboard: London, UK<br>
+                - Frostbyte Database: Dublin, Ireland (provided by MongoDB)<br>
+                <br>
+                We use Oracle Cloud Infrastructure for all services, and all data is stored in the EU.
+            </h2>
+        </section>
+
+        <footer class="footer has-background-grey-light">
+            <div class="content has-text-centered">
+                <p>
+                    <strong>Frostbyte</strong> by <a href="https://pandapa.ws">WhenDawnEnds / Robyn-Dawn W. K.</a> and contributors. MIT Licensed. Source code available on the GitHub repo.
+                    <!-- Contact -->
+                    For any questions, comments or concerns, please contact me on the Support Server, or via email at <a href="mailto:hello@pandapa.ws">hello@pandapa.ws</a>
+                </p>
+                <button class="button is-info" id="themeButton"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+            </div>
+        </footer>
+
+
+        <script>
+            // Note for Canary
+            function showNote() {
+                alert("Canary is NOT hosted full time. It is only hosted when a developer is working on it. As of such, the location is not precise. It is usually hosted in the UK, however it varies depending on the developer's location. Typical locations are: The Netherlands, Austria, United Kingdom, United States of America and Germany.")
+            }
+        </script>
+    </body>
+</html>
