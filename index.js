@@ -36,24 +36,24 @@ fastify.get('/privacy', (req, res) => {
 
     // Invite URLs \\
     fastify.get('/invite/stable', (req, res) => {
-        res.redirect('https://discord.com/api/oauth2/authorize?client_id=732233716604076075&permissions=2105536231&scope=bot');
+        res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${process.env.STABLE_CLIENT_ID}&permissions=2105536231&scope=bot`);
     });
 
     fastify.get('/invite/canary', (req, res) => {
-        res.redirect('https://discord.com/api/oauth2/authorize?client_id=750114971588755477&permissions=2105536231&scope=bot');
+        res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${process.env.CANARY_CLIENT_ID}&permissions=2105536231&scope=bot`);
     });
 
     fastify.get("/invite/alpha", (req, res) => {
-        res.redirect('https://discord.com/api/oauth2/authorize?client_id=1028368913370710139&permissions=2105536231&scope=bot');
+        res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${process.env.ALPHA_CLIENT_ID}&permissions=2105536231&scope=bot`);
     });
 
     fastify.get("/invite/legacy", (req, res) => {
-        res.redirect('https://discord.com/api/oauth2/authorize?client_id=1033789130020241629&permissions=2105536231&scope=bot');
+        res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${process.env.LEGACY_CLIENT_ID}&permissions=2105536231&scope=bot`);
     });
 
     // Support URLs \\
     fastify.get('/support', (req, res) => {
-        res.redirect('https://discord.gg/Mqcgca8 ');
+        res.redirect(`https://discord.gg/${process.env.SUPPORT_INVITE} `);
     });
 
     // Github \\
