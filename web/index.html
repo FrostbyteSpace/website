@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="has-background-dark has-navbar-fixed-top" style="overflow-y:hidden">
     <head>
         <title>Frostbyte</title>
         <!-- Set the icon-->
@@ -12,6 +12,44 @@
         <script src="https://kit.fontawesome.com/c5c07820bb.js" crossorigin="anonymous"></script>
     </head>
     <body>
+        <!-- Navbar -->
+        <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+            <!-- Navbar buttons at the side (hidden by default in a dropdown menu) with dashboard, about us, etc.-->
+            <!-- on the right side-->
+            <div class="navbar-menu" id="navbar-menu">
+                <div class="navbar-item has-dropdown is-hoverable navbar-end">
+                    <a class="navbar-link">
+                        More
+                    </a>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="/dashboard">
+                            <span class="tag is-primary">BETA</span>
+                            Dashboard
+                        </a>
+                        <div class="navbar-divider"></div>
+                        <a class="navbar-item" href="/support">
+                            Support Server
+                        </a>
+                        <a class="navbar-item" href="/github">
+                            GitHub Repo
+                        </a>
+                        <a class="navbar-item" href="/privacy">
+                            Privacy Policy
+                        </a>
+                        <a class="navbar-item" href="/tos">
+                            Terms of Service
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" id="navbar-burger">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </nav>
+
         <section class="hero is-primary">
             <div class="hero-body">
                 <div class="container">
@@ -26,6 +64,16 @@
                 </div>
             </div>
         </section>
+
+        <!-- Mandatory cookie note, since we use cookies for token sessions... -->
+        <!-- Also, should probably let the note be closed -->
+        <section class="section">
+            <div class="notification is-info">
+                <button class="delete"></button>
+                This website uses cookies to log in to Discord, and to remember if you closed this. We are legally required to say this. The developers also have no idea how to handle log in sessions without cookies. So, yeah. Cookies.
+            </div>
+        </section>
+
         <section class="section">
             <h2 class="title">But why?</h2>
             <h3 class="subtitle">
@@ -62,4 +110,40 @@
             </div>
         </footer>
     </body>
+
+    <script>
+        // Script to handle the cookie note
+        var $notification = document.querySelector('.notification');
+        var $delete = document.querySelector('.delete');
+
+        $delete.addEventListener('click', function () {
+            $notification.parentNode.removeChild($notification);
+            document.cookie = "cookieNoteClosed=true; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/";
+        });
+
+        // Script to handle if the cookie note has been closed before
+        // Detectable by the presence of the cookie
+        if (document.cookie.indexOf("cookieNoteClosed=true") >= 0) {
+            $notification.parentNode.removeChild($notification);
+        }
+
+        // Script to handle the navbar burger
+        // There is always going to be one, so we can just use a static ID
+        document.addEventListener('DOMContentLoaded', () => {
+            // The burger will have the ID "navbar-burger"
+            const $navbarBurgers = document.getElementById('navbar-burger');
+
+            if ($navbarBurgers) {
+                $navbarBurgers.addEventListener('click', () => {
+                    // The menu will have the ID "navbar-menu"
+                    const $target = document.getElementById('navbar-menu');
+
+                    // Toggle the class "is-active" on both the "navbar-burger" and the "navbar-menu"
+                    $navbarBurgers.classList.toggle('is-active');
+                    $target.classList.toggle('is-active');
+                });
+            }
+        });
+
+    </script>
 </html>

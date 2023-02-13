@@ -34,6 +34,10 @@ function darkTheme() { // Turn on dark theme
     document.getElementsByTagName("footer")[0].classList.remove("has-background-grey-light");
     document.getElementsByTagName("footer")[0].classList.add("has-background-dark");
 
+    // Change the navbar background to dark \\
+    document.getElementsByTagName("nav")[0].classList.remove("is-primary");
+    document.getElementsByTagName("nav")[0].classList.add("has-background-primary-dark");
+
     // Lastly, change the button to a sun \\
     document.getElementById("themeIcon").classList.add("fas", "fa-sun");
     document.getElementById("themeButton").classList.add("is-warning");
@@ -73,6 +77,10 @@ function lightTheme() { // Turn on light theme
     // Change the footer background to light grey \\
     document.getElementsByTagName("footer")[0].classList.remove("has-background-dark");
     document.getElementsByTagName("footer")[0].classList.add("has-background-grey-light");
+
+    // Change the navbar background to light grey \\
+    document.getElementsByTagName("nav")[0].classList.remove("has-background-primary-dark");
+    document.getElementsByTagName("nav")[0].classList.add("is-primary");
 
     // Lastly, change the button to a moon \\
     document.getElementById("themeIcon").classList.add("fas", "fa-moon");

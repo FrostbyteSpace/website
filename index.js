@@ -2,14 +2,26 @@
 require('dotenv').config();
 
 // Now load required modules \\
-const cookieParser = require('cookie-parser');
 const path = require('path');
 const ejs = require('ejs');
 const fs = require('fs');
+const DiscordOauth2 = require('discord-oauth2');
+
+// Load the discord oauth2 module \\
+const oauth = new DiscordOauth2({
+    clientId: process.env.STABLE_CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    redirectUri: process.env.REDIRECT_URI
+});
 
 // We are using Fastify to start listening \\
 const fastify = require('fastify')({
     logger: false
+});
+
+// Register the Fastify cookie module \\
+fastify.register(require('@fastify/cookie'), {
+    "secret": process.env.COOKIE_SECRET
 });
 
 fastify.get('/', (req, res) => {
@@ -59,6 +71,42 @@ fastify.get('/privacy', (req, res) => {
     // Github \\
     fastify.get('/github', (req, res) => {
         res.redirect('https://github.com/FrostbyteSpace');
+    });
+
+    // OAuth \\
+    fastify.get("/oauth/dashboard", (req, res) => {
+        res.redirect(oauth.generateAuthUrl({
+            scope: 'identify guilds',
+            prompt: 'none'
+        }));
+    });
+
+    fastify.get("/oauth/botAdd/:guildId", (req, res) => { // Add a bot to a server \\
+        res.redirect(oauth.generateAuthUrl({
+            scope: 'bot identify guilds',
+            prompt: 'none',
+            guildId: req.params.guildId,
+            disableGuildSelect: true,
+            permissions: 2105536231,
+            redirectUri: process.env.REDIRECT_URI + '/oauth/callback/'
+        }));
+    });
+
+    fastify.get('/oauth/callback', (req, res) => { // Dashboard OAuth \\
+        oauth.tokenRequest({
+            code: req.query.code,
+            scope: 'identify guilds',
+            grantType: 'authorization_code'
+        }).then((data) => {
+            oauth.getUser(data.access_token).then((user) => {
+                res.setCookie('token', data.access_token, {
+                    path: '/',
+                    maxAge: 604800000,
+                    signed: true
+                });
+                res.redirect('/dashboard');
+            });
+        });
     });
 
 // Assets \\

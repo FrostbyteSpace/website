@@ -17,8 +17,9 @@
   },
   "homepage": "https://github.com/FrostbyteSpace/website#readme",
   "dependencies": {
+    "@fastify/cookie": "^8.3.0",
     "@fastify/static": "^6.5.0",
-    "cookie-parser": "^1.4.6",
+    "discord-oauth2": "^2.11.0",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "fastify": "^4.9.2"
