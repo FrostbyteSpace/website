@@ -32,18 +32,22 @@ fastify.get('/', (req, res) => {
 fastify.get('/dashboard', (req, res) => {
     // Check if the user is logged in \\
     if (req.cookies.token) {
-        console.log(req.cookies.token)
-        // Check if the token is valid \\
-        oauth.getUserGuilds(req.cookies.token).then(guilds => {
-            console.log("Guild scope is valid");
-        }).catch(err => {
-            console.log("Guild scope is invalid");
-        });
-        oauth.getUser(req.cookies.token).then(user => {
+        // Unsign the cookie \\
+        var token = req.unsignCookie(req.cookies.token).value;
+        console.log(token, req.cookies.token)
+        oauth.getUser(token).then(async (user) => {
+            let guilds = (await oauth.getUserGuilds(token)).filter(guild => guild.permissions & 32);
+            // Sort the guilds by name \\
+            guilds.sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            });
+
             // If the token is valid, then render the dashboard \\
             // The dashboard is rendered using EJS.. despite the file being .html \\
             ejs.renderFile(path.join(__dirname, 'web', 'dashboard.html'), {
-                user: user
+                user: user,
+                guilds: guilds,
+                guildCount: guilds.length
             }, (err, str) => {
                 if (err) {
                     console.log(err);
@@ -138,6 +142,12 @@ fastify.get('/privacy', (req, res) => {
                 res.redirect('/dashboard');
             });
         });
+    });
+
+    fastify.get('/oauth/logout', (req, res) => {
+        res.clearCookie('token');
+        res.clearCookie('refreshToken');
+        res.redirect('/');
     });
 
 // Assets \\
