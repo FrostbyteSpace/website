@@ -30,8 +30,37 @@ fastify.get('/', (req, res) => {
 });
 
 fastify.get('/dashboard', (req, res) => {
-    let stream = fs.createReadStream(path.join(__dirname, 'web', 'wip.html')); // I have no idea when this will be done \\
-    res.type('text/html').send(stream);
+    // Check if the user is logged in \\
+    if (req.cookies.token) {
+        console.log(req.cookies.token)
+        // Check if the token is valid \\
+        oauth.getUserGuilds(req.cookies.token).then(guilds => {
+            console.log("Guild scope is valid");
+        }).catch(err => {
+            console.log("Guild scope is invalid");
+        });
+        oauth.getUser(req.cookies.token).then(user => {
+            // If the token is valid, then render the dashboard \\
+            // The dashboard is rendered using EJS.. despite the file being .html \\
+            ejs.renderFile(path.join(__dirname, 'web', 'dashboard.html'), {
+                user: user
+            }, (err, str) => {
+                if (err) {
+                    console.log(err);
+                    res.redirect('/error');
+                } else {
+                    res.type('text/html').send(str);
+                }
+            });
+        }).catch(err => {
+            // If the token is invalid, then redirect to the login page \\
+            console.log(err);
+            res.redirect('/');
+        });
+    } else {
+        // If the user is not logged in, then redirect to the login page \\
+        res.redirect('/oauth/dashboard');
+    }
 });
 
 fastify.get('/tos', (req, res) => {
@@ -81,18 +110,7 @@ fastify.get('/privacy', (req, res) => {
         }));
     });
 
-    fastify.get("/oauth/botAdd/:guildId", (req, res) => { // Add a bot to a server \\
-        res.redirect(oauth.generateAuthUrl({
-            scope: 'bot identify guilds',
-            prompt: 'none',
-            guildId: req.params.guildId,
-            disableGuildSelect: true,
-            permissions: 2105536231,
-            redirectUri: process.env.REDIRECT_URI + '/oauth/callback/'
-        }));
-    });
-
-    fastify.get('/oauth/callback', (req, res) => { // Dashboard OAuth \\
+    fastify.get('/oauth/callback', (req, res) => {
         oauth.tokenRequest({
             code: req.query.code,
             scope: 'identify guilds',
@@ -104,6 +122,19 @@ fastify.get('/privacy', (req, res) => {
                     maxAge: 604800000,
                     signed: true
                 });
+                res.setCookie('cookieNoteClosed', 'true', {
+                    path: '/',
+                    maxAge: 604800000,
+                    signed: true
+                });
+                // If the refreshToken is not null, then set the cookie \\
+                if (data.refresh_token) {
+                    res.setCookie('refreshToken', data.refresh_token, {
+                        path: '/',
+                        maxAge: 604800000,
+                        signed: true
+                    });
+                }
                 res.redirect('/dashboard');
             });
         });
