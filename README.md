@@ -1,5 +1,5 @@
 
-# Frostbyte Acrtic Sunrise
+# Frostbyte Arctic Sunrise
 
 ## The website redesign for Frostbyte.
 
