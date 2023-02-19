@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="has-background-dark has-navbar-fixed-top">
+    <head>
+        <title>Frostbyte</title>
+        <!-- Set the icon-->
+        <link rel="icon" type="image/png" href="assets/avatar_transparent.png" />
+        <!-- Load the themer script -->
+        <script src="assets/themer.js"></script>
+        <!-- Import Bulma -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://kit.fontawesome.com/c5c07820bb.js" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <!-- Sidebar -->
+        <aside class="menu has-background-light mx-1">
+            <!-- Empty space -->
+            <p class="menu-label">\u200b</p>
+
+            <!-- User pfp and username -->
+            <p class="menu-label mx-3">
+                <img src="" width="50" height="50" id="avatar"> 
+                <%= user.username %>#<%= user.discriminator %>
+            </p>
+            <!-- Guild dropdown menu -->
+            <!-- Used for selecting guilds -->
+            <p class="menu-label mx-3">
+                Guilds
+            </p>
+            <div class="menu-list mx-3">
+                <div class="dropdown">
+                    <div class="dropdown-trigger">
+                        <button class="button is-primary is-fullwidth dropdown-trigger" aria-haspopup="true" aria-controls="dropdown-menu5">
+                            <span>Select a guild</span>
+                            <span class="icon is-small">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="dropdown-menu">
+                        <!-- Using EJS, run through every guild the user is in, and add it to the dropdown, with the server icon before the server name. -->
+                        <div class="dropdown-content">
+                            <% for (var i = 0; i < guilds.length; i++) { %>
+                                <div class="dropdown-item">
+                                    <a href="/dashboard/<%= guilds[i].id %>" class="dropdown-item" id="guild-<%= guilds[i].id %>">
+                                        <img src="https://cdn.discordapp.com/icons/<%= guilds[i].id %>/<%= guilds[i].icon %>.png" width="20" height="20">
+                                        <%= guilds[i].name %>
+                                    </a>
+                                </div>
+                            <% } %>
+
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item">
+                                <p>Only servers with <strong>Manage Server</strong> permissions are shown here.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="menu-label mx-3">
+                General
+            </p>
+            <ul class="menu-list mx-3">
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/support">Support Server</a></li>
+                <li><a href="/github">GitHub Repo</a></li>
+                <li><a href="/privacy">Privacy Policy</a></li>
+                <li><a href="/tos">Terms of Service</a></li>
+            </ul>
+
+        </aside>
+
+        
+
+    </body>
+
+    <script>
+        // Get the user's avatar
+        var avatar = document.getElementById("avatar");
+        avatar.src = "https://cdn.discordapp.com/avatars/" + "<%= user.id %>" + "/" + "<%= user.avatar %>" + ".png";
+
+        // Round-ify the avatar
+        avatar.style.borderRadius = "50%";
+
+        // Handle for the guild dropdown
+        var dropdown = document.querySelector('.dropdown');
+        dropdown.addEventListener('click', function(event) {
+            dropdown.classList.toggle('is-active');
+        });
+
+    </script>
+</html>

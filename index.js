@@ -2,14 +2,26 @@
 require('dotenv').config();
 
 // Now load required modules \\
-const cookieParser = require('cookie-parser');
 const path = require('path');
 const ejs = require('ejs');
 const fs = require('fs');
+const DiscordOauth2 = require('discord-oauth2');
+
+// Load the discord oauth2 module \\
+const oauth = new DiscordOauth2({
+    clientId: process.env.STABLE_CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    redirectUri: process.env.REDIRECT_URI
+});
 
 // We are using Fastify to start listening \\
 const fastify = require('fastify')({
     logger: false
+});
+
+// Register the Fastify cookie module \\
+fastify.register(require('@fastify/cookie'), {
+    "secret": process.env.COOKIE_SECRET
 });
 
 fastify.get('/', (req, res) => {
@@ -18,8 +30,41 @@ fastify.get('/', (req, res) => {
 });
 
 fastify.get('/dashboard', (req, res) => {
-    let stream = fs.createReadStream(path.join(__dirname, 'web', 'wip.html')); // I have no idea when this will be done \\
-    res.type('text/html').send(stream);
+    // Check if the user is logged in \\
+    if (req.cookies.token) {
+        // Unsign the cookie \\
+        var token = req.unsignCookie(req.cookies.token).value;
+        console.log(token, req.cookies.token)
+        oauth.getUser(token).then(async (user) => {
+            let guilds = (await oauth.getUserGuilds(token)).filter(guild => guild.permissions & 32);
+            // Sort the guilds by name \\
+            guilds.sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            });
+
+            // If the token is valid, then render the dashboard \\
+            // The dashboard is rendered using EJS.. despite the file being .html \\
+            ejs.renderFile(path.join(__dirname, 'web', 'dashboard.html'), {
+                user: user,
+                guilds: guilds,
+                guildCount: guilds.length
+            }, (err, str) => {
+                if (err) {
+                    console.log(err);
+                    res.redirect('/error');
+                } else {
+                    res.type('text/html').send(str);
+                }
+            });
+        }).catch(err => {
+            // If the token is invalid, then redirect to the login page \\
+            console.log(err);
+            res.redirect('/');
+        });
+    } else {
+        // If the user is not logged in, then redirect to the login page \\
+        res.redirect('/oauth/dashboard');
+    }
 });
 
 fastify.get('/tos', (req, res) => {
@@ -59,6 +104,50 @@ fastify.get('/privacy', (req, res) => {
     // Github \\
     fastify.get('/github', (req, res) => {
         res.redirect('https://github.com/FrostbyteSpace');
+    });
+
+    // OAuth \\
+    fastify.get("/oauth/dashboard", (req, res) => {
+        res.redirect(oauth.generateAuthUrl({
+            scope: 'identify guilds',
+            prompt: 'none'
+        }));
+    });
+
+    fastify.get('/oauth/callback', (req, res) => {
+        oauth.tokenRequest({
+            code: req.query.code,
+            scope: 'identify guilds',
+            grantType: 'authorization_code'
+        }).then((data) => {
+            oauth.getUser(data.access_token).then((user) => {
+                res.setCookie('token', data.access_token, {
+                    path: '/',
+                    maxAge: 604800000,
+                    signed: true
+                });
+                res.setCookie('cookieNoteClosed', 'true', {
+                    path: '/',
+                    maxAge: 604800000,
+                    signed: true
+                });
+                // If the refreshToken is not null, then set the cookie \\
+                if (data.refresh_token) {
+                    res.setCookie('refreshToken', data.refresh_token, {
+                        path: '/',
+                        maxAge: 604800000,
+                        signed: true
+                    });
+                }
+                res.redirect('/dashboard');
+            });
+        });
+    });
+
+    fastify.get('/oauth/logout', (req, res) => {
+        res.clearCookie('token');
+        res.clearCookie('refreshToken');
+        res.redirect('/');
     });
 
 // Assets \\
