@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html class="has-background-dark">
+    <head>
+        <title>Frostbyte</title>
+        <!-- Set the icon-->
+        <link rel="icon" type="image/png" href="assets/avatar_transparent.png" />
+        <!-- Load the themer script -->
+        <script src="assets/themer.js"></script>
+        <!-- Import Bulma -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://kit.fontawesome.com/c5c07820bb.js" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <!-- Navbar -->
+        <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+            <!-- Navbar buttons at the side (hidden by default in a dropdown menu) with dashboard, about us, etc.-->
+            <!-- on the right side-->
+            <div class="navbar-menu" id="navbar-menu">
+                <div class="navbar-item has-dropdown is-hoverable navbar-end">
+                    <a class="navbar-link">
+                        More
+                    </a>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="/dashboard">
+                            <span class="tag is-primary">BETA</span>&nbsp;Dashboard
+                        </a>
+                        <div class="navbar-divider"></div>
+                        <a class="navbar-item" href="/status">
+                            <span class="tag is-primary">BETA</span>&nbsp;Service Status
+                        </a>
+                        <a class="navbar-item" href="/support">
+                            Support Server
+                        </a>
+                        <a class="navbar-item" href="/github">
+                            GitHub Repo
+                        </a>
+                        <a class="navbar-item" href="/privacy">
+                            Privacy Policy
+                        </a>
+                        <a class="navbar-item" href="/tos">
+                            Terms of Service
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" id="navbar-burger">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </nav>
+
+        <section class="hero is-primary">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        <!-- Inser the logo before the name-->
+                        <img src="assets/avatar_transparent.png" width="50" height="50">
+                        Frostbyte: Arctic Sunrise
+                    </h1>
+                    <h2 class="subtitle">
+                        Status Page
+                    </h2>
+                </div>
+            </div>
+        </section>
+
+        
+    </body>
+</html>

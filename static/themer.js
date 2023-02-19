@@ -109,5 +109,9 @@ window.onload = function() {
         // And change the button to active \\
         document.getElementById("themeButton").checked = true;
     }
+    else {
+        lightTheme();
+        currentTheme = "light";
+    }
 }
 

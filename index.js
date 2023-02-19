@@ -29,12 +29,16 @@ fastify.get('/', (req, res) => {
     res.type('text/html').send(stream);
 });
 
+fastify.get('/status', (req, res) => {
+    let stream = fs.createReadStream(path.join(__dirname, 'web', 'status.html'));
+    res.type('text/html').send(stream);
+});
+
 fastify.get('/dashboard', (req, res) => {
     // Check if the user is logged in \\
     if (req.cookies.token) {
         // Unsign the cookie \\
         var token = req.unsignCookie(req.cookies.token).value;
-        console.log(token, req.cookies.token)
         oauth.getUser(token).then(async (user) => {
             let guilds = (await oauth.getUserGuilds(token)).filter(guild => guild.permissions & 32);
             // Sort the guilds by name \\
