@@ -6,6 +6,7 @@ const path = require('path');
 const ejs = require('ejs');
 const fs = require('fs');
 const DiscordOauth2 = require('discord-oauth2');
+let maintenance = false;
 
 // Load the discord oauth2 module \\
 const oauth = new DiscordOauth2({
@@ -61,9 +62,9 @@ fastify.get('/dashboard', (req, res) => {
                 }
             });
         }).catch(err => {
-            // If the token is invalid, then redirect to the login page \\
-            console.log(err);
-            res.redirect('/');
+            // If the token is invalid, revoke the cookie and redirect to the login page \\
+            res.clearCookie('token');
+            res.redirect('/oauth/dashboard');
         });
     } else {
         // If the user is not logged in, then redirect to the login page \\
@@ -102,7 +103,7 @@ fastify.get('/privacy', (req, res) => {
 
     // Support URLs \\
     fastify.get('/support', (req, res) => {
-        res.redirect(`https://discord.gg/${process.env.SUPPORT_INVITE} `);
+        res.redirect(`https://discord.gg/${process.env.SUPPORT_INVITE}`);
     });
 
     // Github \\
